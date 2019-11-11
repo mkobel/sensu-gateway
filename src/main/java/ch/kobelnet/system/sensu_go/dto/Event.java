@@ -8,8 +8,7 @@ import lombok.Setter;
 public class Event {
 
     long timestamp;
-    Entity entity;
-    Check check;
-    Metadata metadata;
+    EventEntity entity;
+    EventCheck check;
 
 }

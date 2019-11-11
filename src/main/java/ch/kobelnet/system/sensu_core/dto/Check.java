@@ -20,16 +20,22 @@ public class Check {
     boolean publish = false;
     int interval;
     int timeout;
-//    int ttl;
+    //    int ttl;
     int ttl_status;
     boolean auto_resolve;
     boolean force_resolve;
     boolean handle;
     String handler;
     List<String> handlers;
-    int low_flap_threshold;
-    int high_flap_threshold;
+    //int low_flap_threshold;
+    //int high_flap_threshold;
     String source;
+
+    List<String> tags;
+
+    long issued;
+    long executed;
+    float duration;
 
 
 }

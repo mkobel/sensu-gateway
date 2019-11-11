@@ -1,6 +1,6 @@
-package ch.kobelnet.system.sensu_go;
+package ch.kobelnet.system.sensu_core;
 
-import ch.kobelnet.system.sensu_go.dto.Event;
+import ch.kobelnet.system.sensu_core.dto.Event;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +13,7 @@ import java.net.SocketException;
 import java.util.function.Function;
 
 @Slf4j
-public class SensuGoReceiver extends Thread {
+public class SensuCoreReceiver extends Thread {
 
     private final int MAX_ERROR_COUNT = 100;
     private DatagramSocket socket;
@@ -21,7 +21,7 @@ public class SensuGoReceiver extends Thread {
     private ObjectMapper mapper;
     private Function<Event, Boolean> sendFunction;
 
-    public SensuGoReceiver(int receiverPort, Function<Event, Boolean> sendFunction) throws SocketException {
+    public SensuCoreReceiver(int receiverPort, Function<Event, Boolean> sendFunction) throws SocketException {
         socket = new DatagramSocket(receiverPort);
         mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -73,4 +73,5 @@ public class SensuGoReceiver extends Thread {
         }
         socket.close();
     }
+
 }

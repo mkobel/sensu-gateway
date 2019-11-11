@@ -26,5 +26,15 @@ dependencies {
 }
 
 application {
-    mainClassName = 'ch.kobelnet.system.SensuGateway'
+    mainClassName = 'ch.kobelnet.system.Gateway'
+}
+
+task fatjar(type: Jar) {
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    manifest {
+        attributes 'Implementation-Title': 'DummyServer', 'Implementation-Version': version
+        attributes 'Main-Class': application.mainClassName
+    }
 }

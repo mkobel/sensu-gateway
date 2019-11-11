@@ -19,7 +19,7 @@ allows to forward events from Sensu Go to Sensu Core.
 
 Register the handler:
 
-`sensuctl handler create sensu-gateway --socket-host gateway-hostname --socket-port 4445 -t udp`
+`sensuctl handler create sensu-gateway --socket-host gateway-hostname --socket-port 4446 -t udp`
 
 ### Sensu Core
 
@@ -44,8 +44,14 @@ Create the file `app.properties` where you run the appliction to override the de
 
 | property | default | description |
 |----------|---------|-------------|
-| receiver.port | 4445 | Listening UDP Port for Sensu Go events |
-| target.host | localhost | Hostname of Sensu Core client socket |
-| target.port | 3030 | Port of Sensu Core client socket
+| core.to-go-enabled | false | Enable Sensu Core to Go processing |
+| core.receiver.port | 4445 | Listening UDP Port for Sensu Core events |
+| core.target.host | localhost | Hostname of Sensu Core client socket |
+| core.target.port | 3030 | Port of Sensu Core client socket |
+| go.to-core-enabled | false | Enable Sensu Go to Core processing |
+| go.receiver.port | 4446 | Listening UDP Port for Sensu Go events |
+| go.api.base | `null` | Sensu Go API URL base |
+| go.api.username | `null` | Sensu Go API Username |
+| go.api.password | `null` | Sensu Go API Password |
 
 For permanent/bundled settings, you might change `src/main/resources/app.properties`

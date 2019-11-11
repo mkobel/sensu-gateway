@@ -10,9 +10,9 @@ import java.util.List;
 public class Check {
     String command;
     List<String> handlers;
-    int high_flap_threshold;
+    //int high_flap_threshold;
     int interval;
-    int low_flap_threshold;
+    //int low_flap_threshold;
     boolean publish;
     // runtime_assets
     List<String> subscriptions;

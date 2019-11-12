@@ -56,7 +56,7 @@ public class Gateway {
         SensuGoSender sender = new SensuGoSender(apiBase, apiUsername, apiPassword);
         try {
             receiver = new SensuCoreReceiver(receiverPort, event -> {
-                if (!event.getCheck().getTags().contains("monitoring:sensu-go")) {
+                if (event.getCheck().getTags() == null || !event.getCheck().getTags().contains("monitoring:sensu-go")) {
                     Event res = convertCoreEventToGoEvent(event);
                     return sender.sendCheckResult(res);
                 } else {
@@ -117,7 +117,9 @@ public class Gateway {
         labels.put("environment", event.getClient().getEnvironment());
         labels.put("management", "puppet");
         labels.put("monitoring", "sensu-core");
-        labels.put("tags", String.join(",", event.getClient().getTags()));
+        if ( event.getClient().getTags() != null) {
+            labels.put("tags", String.join(",", event.getClient().getTags()));
+        }
         metadata.setLabels(labels);
         entity.setMetadata(metadata);
         EventEntitySystem system = new EventEntitySystem();
@@ -135,9 +137,11 @@ public class Gateway {
         metadata = new Metadata();
         metadata.setName(event.getCheck().getName());
         metadata.setNamespace("default");
-        labels = new HashMap<>();
-        labels.put("tags", String.join(",", event.getCheck().getTags()));
-        metadata.setLabels(labels);
+        if ( event.getCheck().getTags() != null) {
+            labels = new HashMap<>();
+            labels.put("tags", String.join(",", event.getCheck().getTags()));
+            metadata.setLabels(labels);
+        }
         check.setMetadata(metadata);
         check.setCommand(event.getCheck().getCommand());
         evt.setCheck(check);

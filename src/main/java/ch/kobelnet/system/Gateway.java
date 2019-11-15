@@ -8,6 +8,7 @@ import ch.kobelnet.system.sensu_go.SensuGoSender;
 import ch.kobelnet.system.sensu_go.dto.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class Gateway {
                 }
             });
             receiver.start();
-        } catch (SocketException e) {
+        } catch (IOException e) {
             if (log.isErrorEnabled()) {
                 log.error("go-to-core server startup failed: {}", e.getMessage());
             }

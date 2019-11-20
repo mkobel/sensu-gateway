@@ -34,8 +34,11 @@ public class Gateway {
 
     private void goToCore(int receiverPort, String targetHost, int targetPort) {
         SensuGoReceiver receiver;
-        SensuCoreSender sender = new SensuCoreSender(targetHost, targetPort);
+        SensuCoreSender sender;
         try {
+            sender = new SensuCoreSender(targetHost, targetPort);
+            sender.start();
+
             receiver = new SensuGoReceiver(receiverPort, event -> {
                 if (!(event.getEntity().getMetadata().getLabels() != null && event.getEntity().getMetadata().getLabels().containsKey("monitoring") && event.getEntity().getMetadata().getLabels().get("monitoring").equals("sensu-core"))) {
                     Check res = convertGoEventToCoreCheck(event);

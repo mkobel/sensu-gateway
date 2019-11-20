@@ -9,21 +9,52 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
-public class SensuCoreSender {
+public class SensuCoreSender extends Thread {
+
+    private static final int MAX_QUEUE_SIZE = 100;
 
     private ObjectMapper mapper;
     private String host;
     private int port;
+    private BlockingQueue<Check> outputQueue;
 
     public SensuCoreSender(String host, int port) {
         mapper = new ObjectMapper();
         this.host = host;
         this.port = port;
+        outputQueue = new LinkedBlockingQueue<>();
     }
 
     public boolean sendCheckResult(Check check) {
+        if (outputQueue.size() <= MAX_QUEUE_SIZE) {
+            outputQueue.add(check);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            Check check;
+            try {
+                check = outputQueue.take();
+                boolean ok = processCheckResult(check);
+                if (!ok) {
+                    log.warn("unable to process check: {}: {}", check.getName(), check.getOutput());
+                }
+            } catch (InterruptedException ex) {
+                log.error("error while waiting for check from the queue: {}", ex.getMessage());
+            }
+        }
+    }
+
+    public boolean processCheckResult(Check check) {
         String response = null;
         try {
             String output = mapper.writeValueAsString(check);

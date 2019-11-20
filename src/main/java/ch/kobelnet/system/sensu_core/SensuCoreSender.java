@@ -12,11 +12,8 @@ import java.net.Socket;
 
 @Slf4j
 public class SensuCoreSender {
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-    private ObjectMapper mapper;
 
+    private ObjectMapper mapper;
     private String host;
     private int port;
 
@@ -30,9 +27,12 @@ public class SensuCoreSender {
         String response = null;
         try {
             String output = mapper.writeValueAsString(check);
-            connect();
-            response = sendMessage(output);
-            disconnect();
+            try (Socket clientSocket = new Socket(host, port);
+                 PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
+            ) {
+                response = sendMessage(output, writer, reader);
+            }
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("failed to send check result: {}", e.getMessage());
@@ -48,27 +48,15 @@ public class SensuCoreSender {
         return false;
     }
 
-    private void connect() throws IOException {
-        clientSocket = new Socket(host, port);
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-    }
-
-    private String sendMessage(String msg) throws IOException {
+    private String sendMessage(String msg, PrintWriter writer, BufferedReader reader) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("send check result: {}", msg);
         }
-        out.println(msg);
-        String response = in.readLine();
+        writer.println(msg);
+        String response = reader.readLine();
         if (log.isDebugEnabled()) {
             log.debug("received response: {}", response);
         }
         return response;
-    }
-
-    private void disconnect() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
     }
 }

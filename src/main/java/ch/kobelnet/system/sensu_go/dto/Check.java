@@ -1,5 +1,6 @@
 package ch.kobelnet.system.sensu_go.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +11,14 @@ import java.util.List;
 public class Check {
     String command;
     List<String> handlers;
-    Integer high_flap_threshold;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    int high_flap_threshold;
     int interval;
-    Integer low_flap_threshold;
+
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    int low_flap_threshold;
+
     boolean publish;
     // runtime_assets
     List<String> subscriptions;

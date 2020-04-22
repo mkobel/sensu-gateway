@@ -14,6 +14,8 @@ public class EventCheck {
     int status;
     List<String> handlers;
     int interval;
+    Integer high_flap_threshold;
+    Integer low_flap_threshold;
     Metadata metadata;
     String command;
     long issued;

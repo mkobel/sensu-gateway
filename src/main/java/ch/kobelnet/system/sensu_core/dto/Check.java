@@ -27,8 +27,8 @@ public class Check {
     boolean handle;
     String handler;
     List<String> handlers;
-    //int low_flap_threshold;
-    //int high_flap_threshold;
+    Integer low_flap_threshold;
+    Integer high_flap_threshold;
     String source;
 
     List<String> tags;

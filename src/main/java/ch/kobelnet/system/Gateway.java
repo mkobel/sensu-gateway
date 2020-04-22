@@ -103,8 +103,11 @@ public class Gateway {
             tags.add("monitoring:sensu-go");
         }
         res.setTags(tags);
-        //res.setLow_flap_threshold(event.getCheck().getLow_flap_threshold());
-        //res.setHigh_flap_threshold(event.getCheck().getHigh_flap_threshold());
+        if (event.getCheck().getLow_flap_threshold() != null && event.getCheck().getHigh_flap_threshold() != null
+                && event.getCheck().getLow_flap_threshold() > 0 && event.getCheck().getHigh_flap_threshold() > 0) {
+            res.setLow_flap_threshold(event.getCheck().getLow_flap_threshold());
+            res.setHigh_flap_threshold(event.getCheck().getHigh_flap_threshold());
+        }
         return res;
     }
 
@@ -138,6 +141,11 @@ public class Gateway {
         check.setIssued(event.getCheck().getIssued());
         check.setExecuted(event.getCheck().getExecuted());
         check.setDuration(event.getCheck().getDuration());
+        if (event.getCheck().getLow_flap_threshold() != null && event.getCheck().getHigh_flap_threshold() != null
+                && event.getCheck().getLow_flap_threshold() > 0 && event.getCheck().getHigh_flap_threshold() > 0) {
+            check.setLow_flap_threshold(event.getCheck().getLow_flap_threshold());
+            check.setHigh_flap_threshold(event.getCheck().getHigh_flap_threshold());
+        }
         metadata = new Metadata();
         metadata.setName(event.getCheck().getName());
         metadata.setNamespace("default");
